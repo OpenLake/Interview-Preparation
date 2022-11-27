@@ -17,5 +17,5 @@ and add a solution by including an embed link from either Codepen, Codesandbox, 
 
 **Mentees Number: 3**
 
-Candidates are encouraged to bring their own idea about how we can improve the functionality and add more features and uesfulness.
+Candidates are encouraged to bring their own ideas about how we can improve the functionality and add more features and usefulness.
 You need to prepare a good proposal containing all these stuff like your timeline and your approach to complete this project.
