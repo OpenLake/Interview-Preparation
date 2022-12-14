@@ -1,37 +1,4 @@
-.main {
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-}
-
-#light {
-  background-color: #fff;
-}
-#dark {
-  background: linear-gradient(120deg, #03578f, #6f039c);
-}
-
-.switch {
-  align-self: flex-end;
-  margin: 2rem 20rem 2rem 0;
-}
-
-.tagline {
-  text-transform: capitalize;
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #000;
-  padding-top: 5rem;
-}
-#dark .tagline {
-  color: #fff;
-}
-
-@media (min-width: 600px) {
-  .switch {
-    margin: 2rem 5rem 2rem 0;
-  }
+#root {
+  margin: 0 auto;
+  text-align: center;
 }
