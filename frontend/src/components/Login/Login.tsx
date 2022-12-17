@@ -51,6 +51,7 @@ const Login = (props: PaperProps, propsButton: ButtonProps) => {
 
   const submitHandler = () => {
     console.log(form.values);
+    navigate('/hr');
     login();
   };
 
