@@ -1,5 +1,16 @@
 import { useContext, useState } from 'react';
-import { Stepper, Button, Group, TextInput, PasswordInput, createStyles, Paper, PaperProps, Text } from '@mantine/core';
+import {
+  Stepper,
+  Button,
+  Group,
+  TextInput,
+  PasswordInput,
+  createStyles,
+  Paper,
+  PaperProps,
+  Text,
+  Select,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import AuthContext from '../../store/auth-context';
 import { useNavigate } from 'react-router-dom';
@@ -20,8 +31,9 @@ const Register = (props: PaperProps) => {
       password: '',
       name: '',
       email: '',
-      website: '',
-      github: '',
+      college: '',
+      linkedin: '',
+      profession: 'student',
     },
 
     validate: (values) => {
@@ -35,6 +47,7 @@ const Register = (props: PaperProps) => {
       if (active === 1) {
         return {
           name: values.name.trim().length < 2 ? 'Name must include at least 2 characters' : null,
+          // profession:values.profession.trim().length>7?'Profession should be either Student of '
           email: /^\S+@\S+$/.test(values.email) ? null : 'Invalid email',
         };
       }
@@ -71,12 +84,22 @@ const Register = (props: PaperProps) => {
 
         <Stepper.Step label="Second step" description="Personal information">
           <TextInput label="Name" placeholder="Name" {...form.getInputProps('name')} />
+          <Select
+            mt="md"
+            label="Profession"
+            defaultValue="student"
+            {...form.getInputProps('profession')}
+            data={[
+              { value: 'student', label: 'Student' },
+              { value: 'professional', label: 'Professional' },
+            ]}
+          />
           <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps('email')} />
         </Stepper.Step>
 
         <Stepper.Step label="Final step" description="Social media">
-          <TextInput label="Website" placeholder="Website" {...form.getInputProps('website')} />
-          <TextInput mt="md" label="GitHub" placeholder="GitHub" {...form.getInputProps('github')} />
+          <TextInput label="College" placeholder="College Name" {...form.getInputProps('college')} />
+          <TextInput mt="md" label="LinkedIn" placeholder="LinkedIn profile" {...form.getInputProps('linkedin')} />
         </Stepper.Step>
         {/* <Stepper.Completed>
           Completed! Form values:

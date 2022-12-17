@@ -1,6 +1,7 @@
 import { AppShell, Navbar, Header, Text } from '@mantine/core';
-import React from 'react';
+// import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import Profile from '../Comments/Profile/Profile';
 // import Assignments from '../Assignments/Assignments';
 // import Attandence from '../Attandence/Attandence';
 import HomeNavbar from '../HomeNavbar/HomeNavbar';
@@ -27,6 +28,7 @@ const Home = () => {
         {/* <Route path="/" element={<Navigate to="hr" />} /> */}
         <Route path="hr" element={<HrRound />} />
         <Route path="hr/:queId" element={<QuestionContent />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
