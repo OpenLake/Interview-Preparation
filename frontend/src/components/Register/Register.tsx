@@ -27,9 +27,8 @@ const Register = (props: PaperProps) => {
 
   const form = useForm({
     initialValues: {
-      username: '',
-      password: '',
       name: '',
+      password: '',
       email: '',
       college: '',
       linkedin: '',
@@ -39,15 +38,13 @@ const Register = (props: PaperProps) => {
     validate: (values) => {
       if (active === 0) {
         return {
-          username: values.username.trim().length < 6 ? 'Username must include at least 6 characters' : null,
+          name: values.name.trim().length < 6 ? 'Username must include at least 6 characters' : null,
           password: values.password.length < 6 ? 'Password must include at least 6 characters' : null,
         };
       }
 
       if (active === 1) {
         return {
-          name: values.name.trim().length < 2 ? 'Name must include at least 2 characters' : null,
-          // profession:values.profession.trim().length>7?'Profession should be either Student of '
           email: /^\S+@\S+$/.test(values.email) ? null : 'Invalid email',
         };
       }
@@ -78,12 +75,11 @@ const Register = (props: PaperProps) => {
       </Text>
       <Stepper active={active} breakpoint="sm">
         <Stepper.Step label="First step" description="Profile settings">
-          <TextInput label="Username" placeholder="Username" {...form.getInputProps('username')} />
+          <TextInput label="Name" placeholder="Name" {...form.getInputProps('name')} />
           <PasswordInput mt="md" label="Password" placeholder="Password" {...form.getInputProps('password')} />
         </Stepper.Step>
 
         <Stepper.Step label="Second step" description="Personal information">
-          <TextInput label="Name" placeholder="Name" {...form.getInputProps('name')} />
           <Select
             mt="md"
             label="Profession"
