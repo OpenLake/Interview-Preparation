@@ -82,7 +82,7 @@ const HrRound = () => {
       <div>
         <Pagination
           //   mt={100}
-          total={10}
+          total={data.length / PAGE_SIZE + 1}
           position="center"
           onChange={(index) => {
             // console.log(page)

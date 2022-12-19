@@ -1,5 +1,16 @@
 import { useContext, useState } from 'react';
-import { Stepper, Button, Group, TextInput, PasswordInput, createStyles, Paper, PaperProps, Text } from '@mantine/core';
+import {
+  Stepper,
+  Button,
+  Group,
+  TextInput,
+  PasswordInput,
+  createStyles,
+  Paper,
+  PaperProps,
+  Text,
+  Select,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import AuthContext from '../../store/auth-context';
 import { useNavigate } from 'react-router-dom';
@@ -16,25 +27,24 @@ const Register = (props: PaperProps) => {
 
   const form = useForm({
     initialValues: {
-      username: '',
-      password: '',
       name: '',
+      password: '',
       email: '',
-      website: '',
-      github: '',
+      college: '',
+      linkedin: '',
+      profession: 'student',
     },
 
     validate: (values) => {
       if (active === 0) {
         return {
-          username: values.username.trim().length < 6 ? 'Username must include at least 6 characters' : null,
+          name: values.name.trim().length < 6 ? 'Username must include at least 6 characters' : null,
           password: values.password.length < 6 ? 'Password must include at least 6 characters' : null,
         };
       }
 
       if (active === 1) {
         return {
-          name: values.name.trim().length < 2 ? 'Name must include at least 2 characters' : null,
           email: /^\S+@\S+$/.test(values.email) ? null : 'Invalid email',
         };
       }
@@ -65,18 +75,27 @@ const Register = (props: PaperProps) => {
       </Text>
       <Stepper active={active} breakpoint="sm">
         <Stepper.Step label="First step" description="Profile settings">
-          <TextInput label="Username" placeholder="Username" {...form.getInputProps('username')} />
+          <TextInput label="Name" placeholder="Name" {...form.getInputProps('name')} />
           <PasswordInput mt="md" label="Password" placeholder="Password" {...form.getInputProps('password')} />
         </Stepper.Step>
 
         <Stepper.Step label="Second step" description="Personal information">
-          <TextInput label="Name" placeholder="Name" {...form.getInputProps('name')} />
+          <Select
+            mt="md"
+            label="Profession"
+            defaultValue="student"
+            {...form.getInputProps('profession')}
+            data={[
+              { value: 'student', label: 'Student' },
+              { value: 'professional', label: 'Professional' },
+            ]}
+          />
           <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps('email')} />
         </Stepper.Step>
 
         <Stepper.Step label="Final step" description="Social media">
-          <TextInput label="Website" placeholder="Website" {...form.getInputProps('website')} />
-          <TextInput mt="md" label="GitHub" placeholder="GitHub" {...form.getInputProps('github')} />
+          <TextInput label="College" placeholder="College Name" {...form.getInputProps('college')} />
+          <TextInput mt="md" label="LinkedIn" placeholder="LinkedIn profile" {...form.getInputProps('linkedin')} />
         </Stepper.Step>
         {/* <Stepper.Completed>
           Completed! Form values:

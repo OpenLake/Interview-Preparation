@@ -70,6 +70,9 @@ const useStyles = createStyles((theme) => ({
       color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
     },
   },
+  profile: {
+    cursor: 'pointer',
+  },
 }));
 
 const HomeNavbar = () => {
@@ -99,24 +102,18 @@ const HomeNavbar = () => {
     <Header height={60}>
       <Container className={classes.header}>
         <Image width={100} height={100} src="https://i.ibb.co/MPvj7xw/logo-removebg-preview.png" />
-        {/* <Avatar src= "https://i.ibb.co/HxPGKX2/logo.png" size= "xl" /> */}
-        {/* <MantineLogo size={28} /> */}
         <Group spacing={5} className={classes.links}>
-          {/* {links.map((link) => (
-            <NavLink
-              key={link.label}
-              to={link.link}
-              className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-              onClick={(event) => {
-                event.preventDefault();
-                setActive(link.link);
-                navigate(link.link);
-              }}
-            >
-              {link.label}
-            </NavLink>
-          ))} */}
           {isLoggedIn && navLinks}
+          {isLoggedIn && (
+            <Avatar
+              className={classes.profile}
+              mr={30}
+              onClick={() => {
+                navigate('/profile');
+              }}
+              radius="xl"
+            />
+          )}
           <DarkThemeToggle />
         </Group>
 

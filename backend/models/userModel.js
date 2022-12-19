@@ -29,12 +29,22 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      //This only works on CREATE and SAVE!!!
+      // This only works on CREATE and SAVE!!!
       validator: function (el) {
         return el === this.password;
       },
     },
     message: 'Passwords are not the same!',
+  },
+  college: {
+    type: String,
+  },
+  linkedin: {
+    type: String,
+  },
+  photo: {
+    data: Buffer,
+    contentType: String,
   },
 });
 
