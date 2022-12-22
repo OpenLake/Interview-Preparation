@@ -1,10 +1,9 @@
 import { Box, Container, createStyles, Pagination, Text, TextInput, ThemeIcon } from '@mantine/core';
-import { useDebouncedValue, usePagination } from '@mantine/hooks';
+import { useDebouncedValue } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
-import React from 'react';
-import { data } from './HrRoundData';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IconSearch } from '@tabler/icons';
+import { queData } from '../../utils/apiRequests';
 const useStyles = createStyles((theme) => {
   return {
     box: {
@@ -23,8 +22,10 @@ const useStyles = createStyles((theme) => {
 
 const PAGE_SIZE = 7;
 
-const HrRound = () => {
+const QuestionPanel = () => {
   const { classes } = useStyles();
+  const [data, setData] = useState([]);
+  const { type } = useParams();
   const [page, setPage] = useState(1);
   const [pageRecords, setPageRecords] = useState(data.slice(0, PAGE_SIZE));
   const navigate = useNavigate();
@@ -32,6 +33,17 @@ const HrRound = () => {
   const [debouncedQuery] = useDebouncedValue(query, 200);
 
   useEffect(() => {
+    const getData = async () => {
+      const response = await queData(type);
+      console.log({ response });
+      setData(response);
+      console.log(data);
+      setPageRecords(data.slice(0, PAGE_SIZE));
+    };
+    getData();
+  }, [type]);
+  useEffect(() => {
+    console.log(queData(type));
     setPageRecords(
       data.filter(({ question }) => {
         if (debouncedQuery !== '' && !`${question} `.toLowerCase().includes(debouncedQuery.trim().toLowerCase())) {
@@ -62,12 +74,10 @@ const HrRound = () => {
       {pageRecords.map((item: any) => {
         return (
           <Box
-            //   component="a"
-            //   width={100}
             key={item.id}
             onClick={() => {
-              console.log(item.id);
-              navigate(item.id);
+              console.log(item._id);
+              navigate(item._id);
             }}
             p={10}
             mb={20}
@@ -81,11 +91,9 @@ const HrRound = () => {
       })}
       <div>
         <Pagination
-          //   mt={100}
           total={data.length / PAGE_SIZE + 1}
           position="center"
           onChange={(index) => {
-            // console.log(page)
             setPage(index);
           }}
           styles={(theme) => ({
@@ -100,4 +108,4 @@ const HrRound = () => {
     </Container>
   );
 };
-export default HrRound;
+export default QuestionPanel;

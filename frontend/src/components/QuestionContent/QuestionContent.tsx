@@ -13,27 +13,19 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { IconBallpen, IconFlame, IconHeart, IconMessage, IconSchool, IconShare } from '@tabler/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { getqestion } from '../../utils/apiRequests';
 import Comments from '../Comments/Comments';
-import { data } from '../HrRound/HrRoundData';
+// import { data } from '../QuestionPanel/HrRoundData';
 const useStyles = createStyles((theme) => ({
   main: {
     width: 700,
     margin: 'auto',
     textAlign: 'left',
-    // color: 'dimmed',
-  },
-  basicInfo: {
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'left',
   },
   social: {
     cursor: 'pointer',
-  },
-  liked: {
-    // backgroundColor: 'red',
   },
 }));
 
@@ -41,20 +33,32 @@ const QuestionContent = () => {
   const { classes, cx } = useStyles();
   const { queId } = useParams();
   const theme = useMantineTheme();
+  // const
   const [isLiked, setIsLiked] = useState(false);
   const [isComments, setIsComments] = useState(false);
-  console.log(queId);
-  let info = data.filter((item) => item.id === queId);
-  const queData = info[0];
-  console.log(info);
+  const [data, setData] = useState({ question: '', basic: '', tips: [], sample: '' });
+
+  useEffect(() => {
+    const question = async () => {
+      const responsedata = await getqestion(queId);
+      console.log(responsedata);
+      setData(responsedata);
+    };
+    question();
+  }, []);
+
+  // console.log(queId);
+  // let info = data.filter((item) => item.id === queId);
+  // const data = info[0];
+  // console.log(info);
 
   const socialSection = (
-    <Card.Section p={20} >
+    <Card.Section p={20}>
       <Group>
         <Group>
           <IconHeart
             color="red"
-            className={cx(classes.social, isLiked && classes.liked)}
+            // className={cx(classes.social, isLiked && classes.liked)}
             onClick={() => {
               setIsLiked(!isLiked);
             }}
@@ -78,22 +82,22 @@ const QuestionContent = () => {
     </Card.Section>
   );
   return (
-    <Card withBorder className={classes.main} mb= {50}>
+    <Card withBorder className={classes.main} mb={50}>
       <Card.Section p={20}>
         <Title order={1} align="left" mb={50} fw={400}>
-          {queData.question}
+          {data.question}
         </Title>
-        {queData.basic && (
+        {data.basic && (
           <Card.Section mt={10} mb={10}>
             <Text align="left" m={10}>
               <Badge leftSection={<IconBallpen />}>Basic Info</Badge>
             </Text>
             <Text align="left" color="dimmed" m={10}>
-              {queData.basic}
+              {data.basic}
             </Text>
           </Card.Section>
         )}
-        {queData.tips && (
+        {data.tips && (
           <Card.Section mt={10} mb={10}>
             <Text align="left" m={10}>
               <Badge color="red" leftSection={<IconFlame color="red" />}>
@@ -101,7 +105,7 @@ const QuestionContent = () => {
               </Badge>
             </Text>
             <List center={false} withPadding m={20}>
-              {queData.tips.map((tip, index) => (
+              {data.tips.map((tip, index) => (
                 <List.Item key={index}>
                   <Text color="dimmed"> {tip}</Text>
                 </List.Item>
@@ -109,14 +113,14 @@ const QuestionContent = () => {
             </List>
           </Card.Section>
         )}
-        {queData.sample && (
+        {data.sample && (
           <Card.Section>
             <Text align="left" m={10}>
               <Badge color="lime" leftSection={<IconSchool color="lime" />}>
                 Quick Response
               </Badge>
             </Text>{' '}
-            <Blockquote color="dimmed">{queData.sample}</Blockquote>
+            <Blockquote color="dimmed">{data.sample}</Blockquote>
           </Card.Section>
         )}
         {/* <Divider mt={20} mb={20} /> */}

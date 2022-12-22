@@ -10,7 +10,7 @@ exports.postQuestion = catchAsync(async (req, res, next) => {
     tips: req.body.tips,
     sample: req.body.sample,
   });
-  res.status(400).json({
+  res.status(200).json({
     status: 'success',
     data: { newQuestion },
   });
@@ -24,6 +24,15 @@ exports.getQuestions = catchAsync(async (req, res, next) => {
       $match: { type: type },
     },
   ]);
+  res.status(200).json({
+    status: 'success',
+    data: que,
+  });
+});
+
+exports.getOneQuestion = catchAsync(async (req, res, next) => {
+  const queId = req.params.id;
+  const que = await Question.findById(queId);
   res.status(200).json({
     status: 'success',
     data: que,

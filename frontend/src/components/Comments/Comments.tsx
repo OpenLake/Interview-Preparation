@@ -13,6 +13,9 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getComments } from '../../utils/apiRequests';
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -42,17 +45,21 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const comment = {
-  postedAt: '10 minutes ago',
-  body: 'This article is so accurate. It helped me land a job in Mars.',
-  author: {
-    name: 'Baburao',
-    image:
-      'https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-  },
-};
 const Comments = ({ id }: any) => {
   const { classes } = useStyles();
+  const [comments, setComments] = useState([{ username: '', comment: '' }]);
+  const { queId } = useParams();
+
+  useEffect(() => {
+    const getComment = async () => {
+      const response = await getComments(queId);
+      // console.log({ response });
+      setComments(response);
+    };
+    getComment();
+  }, []);
+  console.log(comments);
+
   return (
     <Card>
       <Container my={30}>
@@ -63,20 +70,22 @@ const Comments = ({ id }: any) => {
             <Button className={classes.control}>Comment</Button>
           </Group>
         </Paper>
-        <Paper withBorder radius="md" className={classes.comment}>
-          <Group>
-            <Avatar src={comment.author.image} alt={comment.author.name} radius="xl" />
-            <div>
-              <Text size="sm">{comment.author.name}</Text>
-              <Text size="xs" color="dimmed">
-                {comment.postedAt}
-              </Text>
-            </div>
-          </Group>
-          <Text className={classes.body} size="sm">
-            {comment.body}
-          </Text>
-        </Paper>
+        {comments.map((comment, index) => (
+          <Paper withBorder radius="md" mt={20} className={classes.comment}>
+            <Group>
+              <Avatar src={comment.username} alt={comment.username} radius="xl" />
+              <div>
+                <Text size="sm">{comment.username}</Text>
+                <Text size="xs" color="dimmed">
+                  {/* {comment.postedAt} */}
+                </Text>
+              </div>
+            </Group>
+            <Text className={classes.body} size="sm">
+              {comment.comment}
+            </Text>
+          </Paper>
+        ))}
       </Container>
     </Card>
   );
