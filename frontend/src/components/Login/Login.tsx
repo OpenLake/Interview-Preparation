@@ -20,6 +20,7 @@ import { IconBrandTwitter, IconBrandGoogle } from '@tabler/icons';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
+import { loginUser } from '../../utils/apiRequests';
 
 const useStyles = createStyles((theme) => {
   return {
@@ -45,12 +46,14 @@ const Login = (props: PaperProps, propsButton: ButtonProps) => {
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      password: (val) => (val.length < 6 ? 'Password should include at least 5 characters' : null),
     },
   });
+  console.log(form.values);
 
   const submitHandler = () => {
     console.log(form.values);
+    loginUser(form.values);
     navigate('/hr');
     login();
   };

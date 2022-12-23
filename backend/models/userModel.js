@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     maxlength: [40, 'Name must have less or equal to 40 characters'],
-    validate: [validator.isAlpha, 'Name should only contain alphanumeric characters'],
+    // validate: [validator.isAlpha, 'Name should only contain alphanumeric characters'],
   },
   email: {
     type: String,
@@ -25,17 +25,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
-  passwordConfirm: {
-    type: String,
-    required: true,
-    validate: {
-      // This only works on CREATE and SAVE!!!
-      validator: function (el) {
-        return el === this.password;
-      },
-    },
-    message: 'Passwords are not the same!',
-  },
   college: {
     type: String,
   },
@@ -46,14 +35,15 @@ const userSchema = new mongoose.Schema({
     data: Buffer,
     contentType: String,
   },
+  profession: {
+    type: String,
+  },
 });
 
 userSchema.pre('save', async function (next) {
   //hash the password with a cost of 12
   this.password = await bcrypt.hash(this.password, 12);
-
-  //Delete passwordConfirm field
-  this.passwordConfirm = undefined;
+  
   next();
 });
 

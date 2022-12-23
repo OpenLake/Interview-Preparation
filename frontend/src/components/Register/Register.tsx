@@ -14,6 +14,7 @@ import {
 import { useForm } from '@mantine/form';
 import AuthContext from '../../store/auth-context';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../utils/apiRequests';
 
 const useStyles = createStyles(() => {
   return { main: { margin: '5% auto', width: '60%' } };
@@ -24,6 +25,7 @@ const Register = (props: PaperProps) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const { classes } = useStyles();
+  // console.log
 
   const form = useForm({
     initialValues: {
@@ -64,6 +66,8 @@ const Register = (props: PaperProps) => {
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
   const registerHandler = () => {
+    console.log(form.values);
+    registerUser(form.values);
     login();
     navigate('/hr');
   };
