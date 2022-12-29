@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { createStyles, Header, Container, Group, Burger, Image, Avatar } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import React from 'react';
@@ -76,13 +76,15 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const HomeNavbar = () => {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, queTypeChangeHandler, queType } = useContext(AuthContext);
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
   const navigate = useNavigate();
   const { classes, cx } = useStyles();
-
-  console.log({ active });
+  useEffect(() => {
+    console.log({ active });
+    queTypeChangeHandler(active);
+  }, [active]);
   const navLinks = links.map((link) => (
     <NavLink
       key={link.label}

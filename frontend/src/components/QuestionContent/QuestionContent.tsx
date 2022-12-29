@@ -1,9 +1,7 @@
 import {
   Badge,
   Blockquote,
-  Box,
   Card,
-  Code,
   createStyles,
   Divider,
   Group,
@@ -15,9 +13,8 @@ import {
 import { IconBallpen, IconFlame, IconHeart, IconMessage, IconSchool, IconShare } from '@tabler/icons';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getqestion } from '../../utils/apiRequests';
+import { getComments, getqestion } from '../../utils/apiRequests';
 import Comments from '../Comments/Comments';
-// import { data } from '../QuestionPanel/HrRoundData';
 const useStyles = createStyles((theme) => ({
   main: {
     width: 700,
@@ -33,47 +30,33 @@ const QuestionContent = () => {
   const { classes, cx } = useStyles();
   const { queId } = useParams();
   const theme = useMantineTheme();
-  // const
   const [isLiked, setIsLiked] = useState(false);
-  const [isComments, setIsComments] = useState(false);
-  const [data, setData] = useState({ question: '', basic: '', tips: [], sample: '' });
+  const [data, setData] = useState({ question: '', basic: '', tips: [], sample: '', likes: 0, comments: 0 });
 
   useEffect(() => {
     const question = async () => {
       const responsedata = await getqestion(queId);
-      console.log(responsedata);
-      setData(responsedata);
+      const commentsData = await getComments(queId);
+      setData({ ...responsedata, comments: commentsData.length });
     };
     question();
   }, []);
 
-  // console.log(queId);
-  // let info = data.filter((item) => item.id === queId);
-  // const data = info[0];
-  // console.log(info);
-
-  const socialSection = (
+  const socialSection = (likes: any, totalComments: any) => (
     <Card.Section p={20}>
       <Group>
         <Group>
           <IconHeart
             color="red"
-            // className={cx(classes.social, isLiked && classes.liked)}
             onClick={() => {
               setIsLiked(!isLiked);
             }}
           />
-          <Text color="red"> 4k </Text>
+          <Text color="red"> {likes}</Text>
         </Group>
         <Group>
-          <IconMessage
-            color="blue"
-            className={classes.social}
-            onClick={() => {
-              setIsComments(!isComments);
-            }}
-          />
-          <Text color="blue"> 30 </Text>
+          <IconMessage color="blue" className={classes.social} />
+          <Text color="blue"> {totalComments} </Text>
         </Group>
         <Group>
           <IconShare color={theme.colors.gray[5]} className={classes.social} />
@@ -123,14 +106,11 @@ const QuestionContent = () => {
             <Blockquote color="dimmed">{data.sample}</Blockquote>
           </Card.Section>
         )}
-        {/* <Divider mt={20} mb={20} /> */}
-        {socialSection}
-        {isComments && (
-          <Card.Section>
-            <Divider />
-            <Comments id={queId} />
-          </Card.Section>
-        )}
+        {socialSection(data.likes, data.comments)}
+        <Card.Section>
+          <Divider />
+          <Comments id={queId} />
+        </Card.Section>
       </Card.Section>
     </Card>
   );
