@@ -23,6 +23,10 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  time: {
+    type: Date,
+    required: true,
+  },
 });
 
 const comment = mongoose.model('Comment', commentSchema);

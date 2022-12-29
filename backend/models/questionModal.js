@@ -21,6 +21,7 @@ const questionScheme = new mongoose.Schema({
   },
   likes: {
     type: Number,
+    required: true,
   },
 });
 

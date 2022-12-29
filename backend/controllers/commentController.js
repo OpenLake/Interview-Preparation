@@ -1,5 +1,6 @@
 const { catchAsync } = require('../utils/catchAsync');
 const Comment = require('./../models/commentModal');
+const mongoose = require('mongoose');
 
 exports.postComment = catchAsync(async (req, res, next) => {
   const newComment = await Comment.create({
@@ -7,7 +8,8 @@ exports.postComment = catchAsync(async (req, res, next) => {
     type: req.body.type,
     username: req.body.username,
     comment: req.body.comment,
-    user: req.body.user,
+    user: mongoose.Types.ObjectId((req.body.user).trim()),
+    time: req.body.time,
   });
   res.status(200).json({
     status: 'success',

@@ -1,9 +1,10 @@
 import { Box, Container, createStyles, Pagination, Text, TextInput, ThemeIcon } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IconSearch } from '@tabler/icons';
 import { queData } from '../../utils/apiRequests';
+import AuthContext from '../../store/auth-context';
 const useStyles = createStyles((theme) => {
   return {
     box: {
@@ -25,26 +26,32 @@ const PAGE_SIZE = 7;
 const QuestionPanel = () => {
   const { classes } = useStyles();
   const [data, setData] = useState([]);
-  const { type } = useParams();
-  const [page, setPage] = useState(1);
-  const [pageRecords, setPageRecords] = useState(data.slice(0, PAGE_SIZE));
+  // const [page, setPage] = useState(1);
+  // const [pageRecords, setPageRecords] = useState(data.slice(0, PAGE_SIZE));
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebouncedValue(query, 200);
+  const { queType } = useContext(AuthContext);
 
   useEffect(() => {
     const getData = async () => {
-      const response = await queData(type);
+      const response = await queData(queType);
+      console.log({ queType });
       console.log({ response });
       setData(response);
-      console.log(data);
-      setPageRecords(data.slice(0, PAGE_SIZE));
+      // setPageRecords(data.slice(0, PAGE_SIZE));
     };
     getData();
-  }, [type]);
+  }, [queType]);
+
+  // useEffect(() => {
+  //   const from = (page - 1) * PAGE_SIZE;
+  //   const to = from + PAGE_SIZE;
+  //   setPageRecords(data.slice(from, to));
+  // }, [page]);
+  
   useEffect(() => {
-    console.log(queData(type));
-    setPageRecords(
+    setData(
       data.filter(({ question }) => {
         if (debouncedQuery !== '' && !`${question} `.toLowerCase().includes(debouncedQuery.trim().toLowerCase())) {
           return false;
@@ -53,12 +60,6 @@ const QuestionPanel = () => {
       }),
     );
   }, [debouncedQuery]);
-
-  useEffect(() => {
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE;
-    setPageRecords(data.slice(from, to));
-  }, [page]);
 
   return (
     <Container>
@@ -71,12 +72,11 @@ const QuestionPanel = () => {
         onChange={(e) => setQuery(e.currentTarget.value)}
       />
 
-      {pageRecords.map((item: any) => {
+      {data.map((item: any) => {
         return (
           <Box
             key={item.id}
             onClick={() => {
-              console.log(item._id);
               navigate(item._id);
             }}
             p={10}
@@ -90,7 +90,7 @@ const QuestionPanel = () => {
         );
       })}
       <div>
-        <Pagination
+        {/* <Pagination
           total={data.length / PAGE_SIZE + 1}
           position="center"
           onChange={(index) => {
@@ -103,7 +103,7 @@ const QuestionPanel = () => {
               },
             },
           })}
-        />
+        /> */}
       </div>
     </Container>
   );

@@ -1,5 +1,8 @@
 import { createStyles, Card, Avatar, Text, Group, Button, Indicator, useMantineTheme } from '@mantine/core';
 import { IconCameraPlus } from '@tabler/icons';
+import { useContext, useEffect, useState } from 'react';
+import AuthContext from '../../store/auth-context';
+import { getUserInfo } from '../../utils/apiRequests';
 import { profileData } from './ProfileData';
 
 const useStyles = createStyles((theme) => ({
@@ -23,6 +26,15 @@ interface UserCardImageProps {
 const Profile = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
+  const [user, setUser] = useState({ name: '', profession: '', college: '', linkedin: '' });
+  useEffect(() => {
+    const userInfo = async () => {
+      const userData = await getUserInfo(JSON.parse(localStorage.getItem('id') as string));
+      setUser(userData.user);
+      console.log(user);
+    };
+    userInfo();
+  }, []);
 
   return (
     <Card withBorder p="xl" radius="md" className={classes.card}>
@@ -42,15 +54,15 @@ const Profile = () => {
         </Indicator>
       </Group>
       <Text align="center" size="lg" weight={500} mt="sm">
-        {profileData.name}
+        {user.name}
       </Text>
       <Text align="center" size="sm" color="dimmed">
-        {profileData.profession}
+        {user.profession}
       </Text>
       <Text align="center" size="lg" m={10}>
-        {profileData.college}
+        {user.college}
       </Text>
-      <a href="https://www.linkedin.com/in/gaurav-verma321/6 ">
+      <a href={user.linkedin}>
         <Button variant="default"> LinkedIn</Button>
       </a>
     </Card>

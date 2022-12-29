@@ -1,24 +1,25 @@
 import { AppShell, Navbar, Header, Text } from '@mantine/core';
-// import React from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import Profile from '../Profile/Profile';
-// import Assignments from '../Assignments/Assignments';
-// import Attandence from '../Attandence/Attandence';
 import HomeNavbar from '../HomeNavbar/HomeNavbar';
 import QuestionPanel from '../QuestionPanel/QuestionPanel';
 import Login from '../Login/Login';
 import QuestionContent from '../QuestionContent/QuestionContent';
 import Register from '../Register/Register';
-// import MainHeader from '../MainHeader/MainHeader';
-// import NoticeBoard from '../NoticeBoard/NoticeBoard';
-// import Profile from '../Profile/Profile';
+import { useContext, useEffect } from 'react';
+import AuthContext from '../../store/auth-context';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthContext);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/hr');
+    }
+  }, [isLoggedIn]);
   return (
     <AppShell
-      // padding="md"
       navbar={<HomeNavbar />}
-      //   header={<MainHeader />}
       styles={(theme) => ({
         main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
       })}

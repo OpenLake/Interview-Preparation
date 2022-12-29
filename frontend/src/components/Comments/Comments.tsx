@@ -13,9 +13,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { useForm } from '@mantine/form';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getComments } from '../../utils/apiRequests';
+import { getComments, getUserInfo, postComment } from '../../utils/apiRequests';
+import RelativeTime from '@yaireo/relative-time';
+import AuthContext from '../../store/auth-context';
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -47,27 +50,57 @@ const useStyles = createStyles((theme) => ({
 
 const Comments = ({ id }: any) => {
   const { classes } = useStyles();
-  const [comments, setComments] = useState([{ username: '', comment: '' }]);
-  const { queId } = useParams();
+  const [comments, setComments] = useState([{ username: '', comment: '', time: Date.now() }]);
+  const params = useParams();
+  const relativeTime = new RelativeTime();
+  const time = new Date();
+  const { isLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     const getComment = async () => {
-      const response = await getComments(queId);
-      // console.log({ response });
+      const response = await getComments(params.queId);
       setComments(response);
     };
     getComment();
   }, []);
-  console.log(comments);
+
+  const form = useForm({
+    initialValues: {
+      comment: '',
+    },
+
+    validate: {
+      comment: (val) => (val.length < 1 ? 'Comment cannot be null' : null),
+    },
+  });
+  const postHandler = async () => {
+    const userData = await getUserInfo(JSON.parse(localStorage.getItem('id') as string));
+    postComment({
+      que: params.queId,
+      comment: form.values.comment,
+      username: userData.user.name,
+      type: params.type,
+      user: JSON.parse(localStorage.getItem('id') as string),
+      time: Date.now(),
+    });
+  };
 
   return (
     <Card>
       <Container my={30}>
         <Paper mt="xl" mb="md">
-          <TextInput placeholder="Comment here..." required />
+          <TextInput
+            placeholder="Comment here..."
+            required
+            value={form.values.comment}
+            onChange={(event) => form.setFieldValue('comment', event.currentTarget.value)}
+            error={form.errors.comment && 'Invalid comment'}
+          />
           <Group position="apart" mt="lg" className={classes.controls}>
             <Anchor color="dimmed" size="sm" className={classes.control}></Anchor>
-            <Button className={classes.control}>Comment</Button>
+            <Button className={classes.control} onClick={postHandler}>
+              Post
+            </Button>
           </Group>
         </Paper>
         {comments.map((comment, index) => (
@@ -77,7 +110,7 @@ const Comments = ({ id }: any) => {
               <div>
                 <Text size="sm">{comment.username}</Text>
                 <Text size="xs" color="dimmed">
-                  {/* {comment.postedAt} */}
+                  {relativeTime.from(new Date(comment.time))}
                 </Text>
               </div>
             </Group>

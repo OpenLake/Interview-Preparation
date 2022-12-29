@@ -35,7 +35,17 @@ exports.login = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    user,
+    id: user._id,
   });
   next();
+});
+
+exports.getUser = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+  const user = await User.findById({ _id: userId });
+  console.log(user);
+  res.status(200).json({
+    status: 'success',
+    user,
+  });
 });

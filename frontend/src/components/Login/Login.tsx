@@ -30,13 +30,14 @@ const useStyles = createStyles((theme) => {
 
 const Login = (props: PaperProps, propsButton: ButtonProps) => {
   const { isLoggedIn, login } = useContext(AuthContext);
-  console.log(isLoggedIn);
   const { classes } = useStyles();
   const [type, toggle] = useToggle(['login', 'register']);
   const navigate = useNavigate();
   useEffect(() => {
     if (type === 'register') navigate('/register');
   }, [type]);
+
+  console.log({ isLoggedIn });
 
   const form = useForm({
     initialValues: {
@@ -49,13 +50,20 @@ const Login = (props: PaperProps, propsButton: ButtonProps) => {
       password: (val) => (val.length < 6 ? 'Password should include at least 5 characters' : null),
     },
   });
-  console.log(form.values);
 
-  const submitHandler = () => {
-    console.log(form.values);
-    loginUser(form.values);
-    navigate('/hr');
-    login();
+  const submitHandler = async () => {
+    console.log('values= ', form.values);
+    const response = await loginUser(form.values);
+    console.log({ response });
+    if (response?.status) {
+      navigate('/hr');
+      localStorage.setItem('id', JSON.stringify(response.body.id));
+      console.log(localStorage.getItem('id'));
+      login();
+      // setUser(response.body.id);
+    } else {
+      alert('Wrong email or password');
+    }
   };
 
   return (
