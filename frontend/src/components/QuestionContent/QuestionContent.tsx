@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getComments, getqestion } from '../../utils/apiRequests';
 import Comments from '../Comments/Comments';
+import SocialSection from '../SocialSection/SocialSection';
 const useStyles = createStyles((theme) => ({
   main: {
     width: 700,
@@ -30,7 +31,6 @@ const QuestionContent = () => {
   const { classes, cx } = useStyles();
   const { queId } = useParams();
   const theme = useMantineTheme();
-  const [isLiked, setIsLiked] = useState(false);
   const [data, setData] = useState({ question: '', basic: '', tips: [], sample: '', likes: 0, comments: 0 });
 
   useEffect(() => {
@@ -42,28 +42,6 @@ const QuestionContent = () => {
     question();
   }, []);
 
-  const socialSection = (likes: any, totalComments: any) => (
-    <Card.Section p={20}>
-      <Group>
-        <Group>
-          <IconHeart
-            color="red"
-            onClick={() => {
-              setIsLiked(!isLiked);
-            }}
-          />
-          <Text color="red"> {likes}</Text>
-        </Group>
-        <Group>
-          <IconMessage color="blue" className={classes.social} />
-          <Text color="blue"> {totalComments} </Text>
-        </Group>
-        <Group>
-          <IconShare color={theme.colors.gray[5]} className={classes.social} />
-        </Group>
-      </Group>
-    </Card.Section>
-  );
   return (
     <Card withBorder className={classes.main} mb={50}>
       <Card.Section p={20}>
@@ -106,7 +84,7 @@ const QuestionContent = () => {
             <Blockquote color="dimmed">{data.sample}</Blockquote>
           </Card.Section>
         )}
-        {socialSection(data.likes, data.comments)}
+        <SocialSection likes={data.likes} comments={data.comments} />
         <Card.Section>
           <Divider />
           <Comments id={queId} />

@@ -39,3 +39,56 @@ exports.getOneQuestion = catchAsync(async (req, res, next) => {
     data: que,
   });
 });
+
+exports.likeQuestion = catchAsync(async (req, res, next) => {
+  const type = req.params.que_id;
+
+  // const que = await Question.findById(type);
+
+  // if (que.checkUniqueLike(req.body._id, que.likes)) {
+  //   res.status(409).json({
+  //     status: 'success',
+  //     data: 'User already exist',
+  //   });
+  // }
+
+  const data = await Question.findByIdAndUpdate(
+    { _id: type },
+    {
+      $push: {
+        likes: req.body._id,
+      },
+    },
+    {
+      new: true,
+    },
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: data.likes,
+  });
+  next();
+});
+
+exports.unlikeQuestion = catchAsync(async (req, res, next) => {
+  const type = req.params.que_id;
+
+  const data = await Question.findByIdAndUpdate(
+    { _id: type },
+    {
+      $pull: {
+        likes: req.body._id,
+      },
+    },
+    {
+      new: true,
+    },
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: data.likes,
+  });
+  next();
+});
