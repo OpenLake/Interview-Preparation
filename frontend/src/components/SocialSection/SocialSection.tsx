@@ -21,28 +21,6 @@ const SocialSection = ({ likes, comments }: any) => {
   const theme = useMantineTheme();
 
   const [isLiked, setIsLiked] = useState(false);
-  // const [isTouched, setIstouched] = useState(false);
-  // const [totalLikes, setTotalLikes] = useState(0);
-  // useEffect(() => {
-  //   setTotalLikes(likes.length);
-  // }, []);
-  // console.log(totalLikes);
-  // const likeClickHandler = async () => {
-  //   const userId = JSON.parse(localStorage.getItem('id') as string);
-  //   console.log({ queId, userId });
-  //   if (isTouched) {
-  //     if (isLiked) {
-  //       const data = await likeQuestion(queId, userId);
-  //       setTotalLikes(data.length);
-  //     } else {
-  //       const data = await unlikeQuestion(queId, userId);
-  //       setTotalLikes(data.length);
-  //     }
-  //   } else {
-  //     const data = await getqestion(queId);
-  //     setTotalLikes(data.likes.length);
-  //   }
-  // };
   return (
     <Card.Section p={20}>
       <Group>
