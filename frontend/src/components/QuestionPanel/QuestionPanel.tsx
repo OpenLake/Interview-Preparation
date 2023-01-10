@@ -36,8 +36,6 @@ const QuestionPanel = () => {
   useEffect(() => {
     const getData = async () => {
       const response = await queData(queType);
-      console.log({ queType });
-      console.log({ response });
       setData(response);
       // setPageRecords(data.slice(0, PAGE_SIZE));
     };
@@ -49,7 +47,7 @@ const QuestionPanel = () => {
   //   const to = from + PAGE_SIZE;
   //   setPageRecords(data.slice(from, to));
   // }, [page]);
-  
+
   useEffect(() => {
     setData(
       data.filter(({ question }) => {

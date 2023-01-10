@@ -82,7 +82,6 @@ const HomeNavbar = () => {
   const navigate = useNavigate();
   const { classes, cx } = useStyles();
   useEffect(() => {
-    console.log({ active });
     queTypeChangeHandler(active);
   }, [active]);
   const navLinks = links.map((link) => (
@@ -100,10 +99,20 @@ const HomeNavbar = () => {
     </NavLink>
   ));
 
+  const homeClickHander = () => {
+    setActive('hr');
+    navigate('/hr');
+  };
+
   return (
     <Header height={60}>
       <Container className={classes.header}>
-        <Image width={100} height={100} src="https://i.ibb.co/MPvj7xw/logo-removebg-preview.png" />
+        <Image
+          onClick={homeClickHander}
+          width={100}
+          height={100}
+          src="https://i.ibb.co/MPvj7xw/logo-removebg-preview.png"
+        />
         <Group spacing={5} className={classes.links}>
           {isLoggedIn && navLinks}
           {isLoggedIn && (

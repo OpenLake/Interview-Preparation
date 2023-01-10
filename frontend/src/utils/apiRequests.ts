@@ -84,3 +84,35 @@ export const getUserInfo = async (userId: any) => {
     console.log(err);
   }
 };
+
+export const likeQuestion = async (queId: any, userId: any) => {
+  try {
+    const data = await fetch(`http://localhost:3011/v1/home/que/${queId}/like`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ _id: userId }),
+    });
+    const response = await data.json();
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const unlikeQuestion = async (queId: any, userId: any) => {
+  try {
+    const data = await fetch(`http://localhost:3011/v1/home/que/${queId}/unlike`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ _id: userId }),
+    });
+    const response = await data.json();
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
