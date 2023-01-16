@@ -10,6 +10,7 @@ exports.postQuestion = catchAsync(async (req, res, next) => {
     tips: req.body.tips,
     sample: req.body.sample,
     likes: req.body.likes,
+    code: req.body.code,
   });
   res.status(200).json({
     status: 'success',

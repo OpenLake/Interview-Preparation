@@ -13,8 +13,8 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
-import { useContext, useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
 import { useParams } from 'react-router-dom';
 import { getComments, getUserInfo, postComment } from '../../utils/apiRequests';
@@ -86,7 +86,7 @@ const Comments = ({ id }: any) => {
   });
   const postCommentHandler = async () => {
     const userData = await getUserInfo(JSON.parse(localStorage.getItem('id') as string));
-    form.setFieldValue("comment", '');
+    form.setFieldValue('comment', '');
     postComment({
       que: params.queId,
       comment: form.values.comment.trim(),

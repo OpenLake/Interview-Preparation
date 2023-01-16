@@ -15,6 +15,9 @@ const questionScheme = new mongoose.Schema({
     type: String,
     required: true,
   },
+  code: {
+    type: String,
+  },
   tips: [{ type: String }],
   sample: {
     type: String,
