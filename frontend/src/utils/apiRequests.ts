@@ -1,5 +1,5 @@
-const serverURL = 'interview-preparation-production.up.railway.app/v1';
-
+// const serverURL = 'interview-preparation-production.up.railway.app/v1';
+const serverURL= 'http://localhost:3000/v1';
 export const queData = async (type: any) => {
   try {
     console.log(`${serverURL}/home/${type}`);
