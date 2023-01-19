@@ -13,12 +13,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
-import { useContext, useEffect, useState } from 'react';
+import Pusher from 'pusher-js';
 import { useParams } from 'react-router-dom';
 import { getComments, getUserInfo, postComment } from '../../utils/apiRequests';
 import RelativeTime from '@yaireo/relative-time';
-import AuthContext from '../../store/auth-context';
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -53,13 +53,24 @@ const Comments = ({ id }: any) => {
   const [comments, setComments] = useState([{ username: '', comment: '', time: Date.now() }]);
   const params = useParams();
   const relativeTime = new RelativeTime();
-  const time = new Date();
-  const { isLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    const updateComments = () => {
+      const pusher = new Pusher('c60bbe3cbde2425488b5', {
+        cluster: 'ap2',
+      });
+      const channel = pusher.subscribe('comments');
+      channel.bind('inserted', function (data: any) {
+        setComments((comments) => [...comments, data].reverse());
+      });
+    };
+    updateComments();
+  }, []);
 
   useEffect(() => {
     const getComment = async () => {
       const response = await getComments(params.queId);
-      setComments(response);
+      setComments(response.reverse());
     };
     getComment();
   }, []);
@@ -70,14 +81,15 @@ const Comments = ({ id }: any) => {
     },
 
     validate: {
-      comment: (val) => (val.length < 1 ? 'Comment cannot be null' : null),
+      comment: (val) => (val.trim().length < 2 ? 'Invalid Comment' : null),
     },
   });
-  const postHandler = async () => {
+  const postCommentHandler = async () => {
     const userData = await getUserInfo(JSON.parse(localStorage.getItem('id') as string));
+    form.setFieldValue('comment', '');
     postComment({
       que: params.queId,
-      comment: form.values.comment,
+      comment: form.values.comment.trim(),
       username: userData.user.name,
       type: params.type,
       user: JSON.parse(localStorage.getItem('id') as string),
@@ -88,21 +100,21 @@ const Comments = ({ id }: any) => {
   return (
     <Card>
       <Container my={30}>
-        <Paper mt="xl" mb="md">
+        <form onSubmit={form.onSubmit(postCommentHandler)}>
           <TextInput
-            placeholder="Comment here..."
             required
+            placeholder="Comment here..."
             value={form.values.comment}
             onChange={(event) => form.setFieldValue('comment', event.currentTarget.value)}
-            error={form.errors.comment && 'Invalid comment'}
+            error={form.errors.comment && 'Comment should have atleast two character'}
           />
           <Group position="apart" mt="lg" className={classes.controls}>
             <Anchor color="dimmed" size="sm" className={classes.control}></Anchor>
-            <Button className={classes.control} onClick={postHandler}>
+            <Button type="submit" className={classes.control}>
               Post
             </Button>
           </Group>
-        </Paper>
+        </form>
         {comments.map((comment, index) => (
           <Paper withBorder radius="md" mt={20} className={classes.comment}>
             <Group>

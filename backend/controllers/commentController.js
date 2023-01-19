@@ -8,7 +8,7 @@ exports.postComment = catchAsync(async (req, res, next) => {
     type: req.body.type,
     username: req.body.username,
     comment: req.body.comment,
-    user: mongoose.Types.ObjectId((req.body.user).trim()),
+    user: mongoose.Types.ObjectId(req.body.user.trim()),
     time: req.body.time,
   });
   res.status(200).json({

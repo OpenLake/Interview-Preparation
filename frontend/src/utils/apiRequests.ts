@@ -1,8 +1,9 @@
-const serverURL = 'http://localhost:3011';
+const serverURL = 'interview-preparation-production.up.railway.app/v1';
 
 export const queData = async (type: any) => {
   try {
-    const data = await fetch(`${serverURL}/v1/home/${type}`);
+    console.log(`${serverURL}/home/${type}`);
+    const data = await fetch(`${serverURL}/home/${type}`);
     const responseData = await data.json();
     return responseData.data;
   } catch (err) {
@@ -12,7 +13,7 @@ export const queData = async (type: any) => {
 
 export const registerUser = async (userDetails: any) => {
   try {
-    const data = await fetch(`${serverURL}/v1/users/signup`, {
+    const data = await fetch(`${serverURL}/users/signup`, {
       headers: {
         'Content-type': 'application/json',
       },
@@ -26,7 +27,7 @@ export const registerUser = async (userDetails: any) => {
 
 export const loginUser = async (userAuth: any) => {
   try {
-    const data = await fetch(`${serverURL}/v1/users/login`, {
+    const data = await fetch(`${serverURL}/users/login`, {
       headers: {
         'Content-type': 'application/json',
       },
@@ -42,7 +43,7 @@ export const loginUser = async (userAuth: any) => {
 
 export const getqestion = async (queId: any) => {
   try {
-    const response = await fetch(`${serverURL}/v1/home/que/${queId}`);
+    const response = await fetch(`${serverURL}/home/que/${queId}`);
     const responseData = await response.json();
     return responseData.data;
   } catch (err) {
@@ -52,7 +53,7 @@ export const getqestion = async (queId: any) => {
 
 export const getComments = async (queId: any) => {
   try {
-    const response = await fetch(`${serverURL}/v1/comments/${queId}`);
+    const response = await fetch(`${serverURL}/comments/${queId}`);
     const responseData = await response.json();
     return responseData.data;
   } catch (err) {
@@ -62,7 +63,7 @@ export const getComments = async (queId: any) => {
 
 export const postComment = async (commentData: any) => {
   try {
-    await fetch(`${serverURL}/v1/comments/post`, {
+    await fetch(`${serverURL}/comments/post`, {
       headers: {
         'Content-type': 'application/json',
       },
@@ -76,10 +77,42 @@ export const postComment = async (commentData: any) => {
 
 export const getUserInfo = async (userId: any) => {
   try {
-    const data = await fetch(`${serverURL}/v1/users/${userId}`);
+    const data = await fetch(`${serverURL}/users/${userId}`);
     const response = await data.json();
     console.log({ response });
     return response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const likeQuestion = async (queId: any, userId: any) => {
+  try {
+    const data = await fetch(`http://localhost:3011/home/que/${queId}/like`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ _id: userId }),
+    });
+    const response = await data.json();
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const unlikeQuestion = async (queId: any, userId: any) => {
+  try {
+    const data = await fetch(`http://localhost:3011/home/que/${queId}/unlike`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ _id: userId }),
+    });
+    const response = await data.json();
+    return response.data;
   } catch (err) {
     console.log(err);
   }

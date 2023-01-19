@@ -5,6 +5,7 @@ const AuthContext = React.createContext({
   login: () => {},
   queTypeChangeHandler: (queId) => {},
   queType: '',
+  logout: () => {},
 });
 
 export default AuthContext;

@@ -4,17 +4,28 @@ import {
   Card,
   createStyles,
   Divider,
-  Group,
   List,
+  Code,
   Text,
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { IconBallpen, IconFlame, IconHeart, IconMessage, IconSchool, IconShare } from '@tabler/icons';
+import { Prism } from '@mantine/prism';
+import {
+  IconBallpen,
+  IconBrandCodepen,
+  IconBrandVscode,
+  IconFlame,
+  IconHeart,
+  IconMessage,
+  IconSchool,
+  IconShare,
+} from '@tabler/icons';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getComments, getqestion } from '../../utils/apiRequests';
 import Comments from '../Comments/Comments';
+import SocialSection from '../SocialSection/SocialSection';
 const useStyles = createStyles((theme) => ({
   main: {
     width: 700,
@@ -24,14 +35,28 @@ const useStyles = createStyles((theme) => ({
   social: {
     cursor: 'pointer',
   },
+  code: {
+    width: '100%',
+    height: '500px',
+    border: 0,
+    borderRadius: '4px',
+    overflow: 'hidden',
+  },
 }));
 
 const QuestionContent = () => {
   const { classes, cx } = useStyles();
   const { queId } = useParams();
   const theme = useMantineTheme();
-  const [isLiked, setIsLiked] = useState(false);
-  const [data, setData] = useState({ question: '', basic: '', tips: [], sample: '', likes: 0, comments: 0 });
+  const [data, setData] = useState({
+    question: '',
+    basic: '',
+    tips: [],
+    sample: '',
+    code: '',
+    likes: 0,
+    comments: 0,
+  });
 
   useEffect(() => {
     const question = async () => {
@@ -42,28 +67,6 @@ const QuestionContent = () => {
     question();
   }, []);
 
-  const socialSection = (likes: any, totalComments: any) => (
-    <Card.Section p={20}>
-      <Group>
-        <Group>
-          <IconHeart
-            color="red"
-            onClick={() => {
-              setIsLiked(!isLiked);
-            }}
-          />
-          <Text color="red"> {likes}</Text>
-        </Group>
-        <Group>
-          <IconMessage color="blue" className={classes.social} />
-          <Text color="blue"> {totalComments} </Text>
-        </Group>
-        <Group>
-          <IconShare color={theme.colors.gray[5]} className={classes.social} />
-        </Group>
-      </Group>
-    </Card.Section>
-  );
   return (
     <Card withBorder className={classes.main} mb={50}>
       <Card.Section p={20}>
@@ -75,9 +78,7 @@ const QuestionContent = () => {
             <Text align="left" m={10}>
               <Badge leftSection={<IconBallpen />}>Basic Info</Badge>
             </Text>
-            <Text align="left" color="dimmed" m={10}>
-              {data.basic}
-            </Text>
+            <Text align="left" color="dimmed" m={10} dangerouslySetInnerHTML={{ __html: data.basic }} />
           </Card.Section>
         )}
         {data.tips && (
@@ -90,10 +91,26 @@ const QuestionContent = () => {
             <List center={false} withPadding m={20}>
               {data.tips.map((tip, index) => (
                 <List.Item key={index}>
-                  <Text color="dimmed"> {tip}</Text>
+                  <Text color="dimmed" dangerouslySetInnerHTML={{ __html: tip }} />
                 </List.Item>
               ))}
             </List>
+          </Card.Section>
+        )}
+        {data.code && (
+          <Card.Section mt={10} mb={10}>
+            <Text align="left" m={10}>
+              <Badge color="red" leftSection={<IconBrandVscode color="red" />}>
+                Code
+              </Badge>
+            </Text>
+            <iframe
+              src={data.code}
+              className={classes.code}
+              title="Interview Preparation Question Codes"
+              allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+              sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+            ></iframe>
           </Card.Section>
         )}
         {data.sample && (
@@ -106,7 +123,7 @@ const QuestionContent = () => {
             <Blockquote color="dimmed">{data.sample}</Blockquote>
           </Card.Section>
         )}
-        {socialSection(data.likes, data.comments)}
+        <SocialSection likes={data.likes} comments={data.comments} />
         <Card.Section>
           <Divider />
           <Comments id={queId} />
